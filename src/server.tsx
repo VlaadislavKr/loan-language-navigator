@@ -13,16 +13,15 @@ interface RenderResult {
 /**
  * Серверный рендеринг приложения
  * @param url - URL запроса
- * @param context - контекст для StaticRouter
  */
-export function render(url: string, context = {}): RenderResult {
+export function render(url: string): RenderResult {
   // Создаем контекст для react-helmet-async
   const helmetContext: { helmet?: HelmetServerState } = {};
   
   // Рендерим приложение в строку
   const html = renderToString(
     <HelmetProvider context={helmetContext}>
-      <StaticRouter location={url} context={context}>
+      <StaticRouter location={url}>
         <App />
       </StaticRouter>
     </HelmetProvider>
@@ -66,7 +65,7 @@ export function renderFullPage(url: string): string {
 /**
  * Экспортируем функцию создания сервера для использования в express или другом серверном фреймворке
  */
-export default function createServer() {
+export function createServer() {
   return {
     render,
     renderFullPage
