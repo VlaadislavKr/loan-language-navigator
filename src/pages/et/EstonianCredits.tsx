@@ -1,9 +1,7 @@
-
 import React from 'react';
 import MainLayout from '@/components/layouts/MainLayout';
 import { getTranslation } from '@/lib/i18n/translations';
-import { getCreditOffersByCountry } from '@/lib/models/creditOffers';
-import { getLendersForCountry } from '@/lib/models/lenders';
+import { getCreditOffersByCountry, getLendersForCountry } from '@/lib/models/lenders';
 import { creditTypeNames } from '@/lib/models/creditTypes';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
