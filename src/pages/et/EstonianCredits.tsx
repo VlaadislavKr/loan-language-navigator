@@ -1,3 +1,4 @@
+
 import React from 'react';
 import MainLayout from '@/components/layouts/MainLayout';
 import { getTranslation } from '@/lib/i18n/translations';
@@ -22,7 +23,16 @@ const EstonianCredits = () => {
   const lenders = getLendersForCountry(currentCountry);
 
   return (
-    <MainLayout currentCountry={currentCountry} currentLocale={currentLocale}>
+    <MainLayout 
+      currentCountry={currentCountry} 
+      currentLocale={currentLocale}
+      pageMeta={{
+        page: 'credits',
+        customData: {
+          ogImage: 'https://44finance.com/images/et-credits-og.jpg'
+        }
+      }}
+    >
       <div className="container mx-auto px-4 py-12">
         <h1 className="text-4xl font-bold mb-8 text-center">
           {getTranslation(currentLocale, 'credits.title')}
