@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { LocaleCode, countries, getLocalizedUrl } from '@/lib/i18n/config';
 import { Button } from '@/components/ui/button';
+import LanguageSwitcher from '../features/LanguageSwitcher';
+import { getTranslation } from '@/lib/i18n/translations';
 
 interface HeaderProps {
   currentCountry?: string;
@@ -13,13 +15,14 @@ interface HeaderProps {
 
 /**
  * Компонент заголовка сайта
- * Отображает логотип и навигационное меню
+ * Отображает логотип, навигационное меню и переключатель языков
+ * Оптимизирован для server-side rendering
  */
-const Header: React.FC<HeaderProps> = ({ 
+const Header = ({ 
   currentCountry = 'global', 
   currentLocale = 'en',
   className
-}) => {
+}: HeaderProps) => {
   return (
     <header className={cn("w-full border-b bg-background", className)}>
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
@@ -37,28 +40,29 @@ const Header: React.FC<HeaderProps> = ({
               to={getLocalizedUrl(currentCountry, currentLocale, 'credits')} 
               className="text-sm font-medium text-muted-foreground hover:text-primary"
             >
-              {currentLocale === 'en' ? 'Credits' : 
-               currentLocale === 'et' ? 'Laenud' :
-               currentLocale === 'ru' ? 'Кредиты' :
-               currentLocale === 'lt' ? 'Paskolos' :
-               'Laina'
-              }
+              {getTranslation(currentLocale, 'nav.credits')}
             </Link>
           )}
           <Link 
             to={getLocalizedUrl(currentCountry, currentLocale, 'about')} 
             className="text-sm font-medium text-muted-foreground hover:text-primary"
           >
-            {currentLocale === 'en' ? 'About' : 
-             currentLocale === 'et' ? 'Meist' :
-             currentLocale === 'ru' ? 'О нас' :
-             currentLocale === 'lt' ? 'Apie mus' :
-             'Meistä'
-            }
+            {getTranslation(currentLocale, 'nav.about')}
+          </Link>
+          <Link 
+            to={getLocalizedUrl(currentCountry, currentLocale, 'privacy')} 
+            className="text-sm font-medium text-muted-foreground hover:text-primary"
+          >
+            {getTranslation(currentLocale, 'nav.privacy')}
           </Link>
         </nav>
         
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-3">
+          <LanguageSwitcher 
+            currentCountry={currentCountry}
+            currentLocale={currentLocale}
+          />
+          
           <Button variant="outline" size="sm">
             {countries[currentCountry].flag} {countries[currentCountry].name}
           </Button>

@@ -2,6 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { LocaleCode, getLocalizedUrl } from '@/lib/i18n/config';
+import { getTranslation } from '@/lib/i18n/translations';
 
 interface FooterProps {
   currentCountry?: string;
@@ -11,11 +12,12 @@ interface FooterProps {
 /**
  * Компонент подвала сайта
  * Отображает навигацию, копирайт и ссылку на политику конфиденциальности
+ * Оптимизирован для server-side rendering
  */
-const Footer: React.FC<FooterProps> = ({ 
+const Footer = ({ 
   currentCountry = 'global', 
   currentLocale = 'en' 
-}) => {
+}: FooterProps) => {
   const year = new Date().getFullYear();
   
   return (
@@ -24,11 +26,7 @@ const Footer: React.FC<FooterProps> = ({
         <div className="flex flex-col md:flex-row justify-between items-center">
           <div className="mb-4 md:mb-0">
             <p className="text-sm text-muted-foreground">
-              © {year} 44Finance. {currentLocale === 'en' ? 'All rights reserved.' : 
-                                  currentLocale === 'et' ? 'Kõik õigused kaitstud.' :
-                                  currentLocale === 'ru' ? 'Все права защищены.' :
-                                  currentLocale === 'lt' ? 'Visos teisės saugomos.' :
-                                  'Kaikki oikeudet pidätetään.'}
+              © {year} 44Finance. {getTranslation(currentLocale, 'footer.rights')}
             </p>
           </div>
           
@@ -37,22 +35,14 @@ const Footer: React.FC<FooterProps> = ({
               to={getLocalizedUrl(currentCountry, currentLocale, 'privacy')} 
               className="text-sm text-muted-foreground hover:text-primary"
             >
-              {currentLocale === 'en' ? 'Privacy Policy' :
-               currentLocale === 'et' ? 'Privaatsuspoliitika' :
-               currentLocale === 'ru' ? 'Политика конфиденциальности' :
-               currentLocale === 'lt' ? 'Privatumo politika' :
-               'Tietosuojakäytäntö'}
+              {getTranslation(currentLocale, 'privacy.title')}
             </Link>
             {currentCountry !== 'global' && (
               <Link 
                 to={getLocalizedUrl(currentCountry, currentLocale, 'about')} 
                 className="text-sm text-muted-foreground hover:text-primary"
               >
-                {currentLocale === 'en' ? 'About Us' : 
-                 currentLocale === 'et' ? 'Meist' :
-                 currentLocale === 'ru' ? 'О нас' :
-                 currentLocale === 'lt' ? 'Apie mus' :
-                 'Meistä'}
+                {getTranslation(currentLocale, 'about.title')}
               </Link>
             )}
           </div>
