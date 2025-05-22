@@ -13,12 +13,13 @@ interface MainLayoutProps {
 /**
  * Основной макет для страниц сайта
  * Включает Header, основное содержимое и Footer
+ * Оптимизирован для server-side rendering
  */
-const MainLayout: React.FC<MainLayoutProps> = ({ 
-  children, 
-  currentCountry = 'global', 
-  currentLocale = 'en' 
-}) => {
+const MainLayout = ({
+  children,
+  currentCountry = 'global',
+  currentLocale = 'en'
+}: MainLayoutProps) => {
   return (
     <div className="flex flex-col min-h-screen">
       <Header currentCountry={currentCountry} currentLocale={currentLocale} />

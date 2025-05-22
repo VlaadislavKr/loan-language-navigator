@@ -10,7 +10,16 @@ import About from "./pages/About";
 import CV from "./pages/CV";
 import NotFound from "./pages/NotFound";
 
-const queryClient = new QueryClient();
+// Создаем instance QueryClient вне компонента для SSR совместимости
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false, // Оптимизация для SSR
+      refetchOnMount: false,       // Оптимизация для SSR
+      staleTime: 1000 * 60 * 5,    // 5 минут - данные считаются свежими
+    },
+  },
+});
 
 const App = () => (
   <QueryClientProvider client={queryClient}>

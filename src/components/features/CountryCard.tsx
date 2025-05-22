@@ -17,14 +17,15 @@ interface CountryCardProps {
 /**
  * Компонент карточки страны
  * Отображает информацию о стране и доступных языках
+ * Оптимизирован для server-side rendering
  */
-const CountryCard: React.FC<CountryCardProps> = ({
+const CountryCard = ({
   countryCode,
   name,
   flag,
   availableLocales,
   description
-}) => {
+}: CountryCardProps) => {
   return (
     <Card className="overflow-hidden transition-all hover:shadow-md">
       <CardHeader className="pb-3">
