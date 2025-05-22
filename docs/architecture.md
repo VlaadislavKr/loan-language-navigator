@@ -19,8 +19,10 @@ credit-compass-global/
 │   ├── lib/                  # Утилиты и функции
 │   │   ├── i18n/             # Локализация и интернационализация
 │   │   ├── utils/            # Общие утилиты
+│   │   ├── models/           # Модели данных
+│   │   │   ├── creditTypes/  # Типы кредитов
+│   │   │   └── lenders/      # Кредиторы и их предложения
 │   │   └── services/         # Сервисы для работы с данными
-│   ├── models/               # Типы и интерфейсы данных
 │   ├── pages/                # Компоненты страниц
 │   │   ├── Home/             # Главная страница
 │   │   ├── About/            # Страница "О нас"
@@ -98,17 +100,63 @@ src/components/features/CreditCard/
 └── types.ts                # Типы и интерфейсы
 ```
 
-### 3. Модель данных для кредитных предложений
+### 3. Модель данных для кредитов
 
 ```
-src/models/
-├── common.ts               # Общие типы
-├── credit.ts               # Модели для кредитных предложений
-├── lender.ts               # Модели для кредиторов
-└── countries/              # Специфичные для стран модели
-    ├── estonia.ts
-    ├── lithuania.ts
-    └── finland.ts
+src/lib/models/
+├── creditTypes/            # Типы кредитов
+│   ├── quickLoan.ts        # Быстрый кредит
+│   ├── consumerLoan.ts     # Потребительский кредит
+│   ├── creditLine.ts       # Кредитная линия
+│   └── index.ts            # Индексный файл с экспортами и интерфейсами
+└── lenders/                # Кредиторы
+    ├── ferratum.ts         # Данные о кредиторе и его предложениях
+    ├── bondora.ts          # Данные о кредиторе и его предложениях
+    ├── credit24.ts         # Данные о кредиторе и его предложениях
+    └── index.ts            # Индексный файл с экспортами и интерфейсами
+```
+
+### Структура данных кредиторов
+
+Каждый кредитор содержит:
+1. Общую информацию о компании (название, логотип, лицензия и т.д.)
+2. Список кредитных предложений со всеми параметрами
+
+```typescript
+export interface Lender {
+  id: string;
+  name: string;
+  logo: string;
+  website: string;
+  countries: string[];
+  establishedYear: number;
+  license: string;
+  description: Record<string, string>;
+  creditOffers: CreditOffer[];
+}
+
+export interface CreditOffer {
+  id: string;
+  creditType: CreditType;
+  minAmount: number;
+  maxAmount: number;
+  minTerm: number;
+  maxTerm: number;
+  interestRate: {
+    min: number;
+    max: number;
+    type: 'fixed' | 'variable';
+  };
+  annualPercentageRate: {
+    min: number;
+    max: number;
+  };
+  applicationFee: number;
+  adminFee: number;
+  earlyRepaymentFee: number;
+  requirements: Record<string, string[]>;
+  features: Record<string, string[]>;
+}
 ```
 
 ### 4. Управление состоянием
@@ -128,38 +176,7 @@ src/lib/services/formService/
 └── formMailer.ts           # Отправка данных по SMTP
 ```
 
-## Типизация данных
-
-### Пример модели для кредитных предложений:
-
-```typescript
-export interface CreditOffer {
-  id: string;
-  type: CreditType;
-  lender: LenderInfo;
-  interestRate: {
-    min: number;
-    max: number;
-    fixedOrVariable: 'fixed' | 'variable';
-  };
-  amount: {
-    min: number;
-    max: number;
-    currency: string;
-  };
-  term: {
-    min: number;
-    max: number;
-    unit: 'day' | 'month' | 'year';
-  };
-  requirements: string[];
-  features: string[];
-  url: string;
-  country: CountryCode;
-}
-```
-
-### Интернационализация URL:
+## Интернационализация URL:
 
 ```typescript
 export const URL_MAPPINGS = {
