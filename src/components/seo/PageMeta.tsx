@@ -1,21 +1,23 @@
 
 import React from 'react';
-import { Helmet } from 'react-helmet';
+import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { PageMeta } from '@/lib/seo/metadata';
 
 interface PageMetaProps {
   metadata: PageMeta;
   children?: React.ReactNode;
+  helmetContext?: any; // Для передачи контекста при SSR
 }
 
 /**
  * Компонент для добавления метаданных на страницу
- * Использует react-helmet для вставки мета-тегов в head
+ * Оптимизирован для SSR с использованием react-helmet-async
  */
-const PageMetaComponent: React.FC<PageMetaProps> = ({ metadata, children }) => {
+const PageMetaComponent: React.FC<PageMetaProps> = ({ metadata, children, helmetContext }) => {
   const { title, description, canonical, hreflang, ogImage, jsonLd } = metadata;
-  
-  return (
+
+  // SSR-совместимый провайдер для Helmet
+  const helmetContent = (
     <Helmet>
       {/* Базовые мета-теги */}
       <title>{title}</title>
@@ -52,6 +54,14 @@ const PageMetaComponent: React.FC<PageMetaProps> = ({ metadata, children }) => {
       {children}
     </Helmet>
   );
+
+  // Если передан контекст, используем его для SSR
+  if (helmetContext) {
+    return <HelmetProvider context={helmetContext}>{helmetContent}</HelmetProvider>;
+  }
+  
+  // В противном случае используем обычный режим
+  return <HelmetProvider>{helmetContent}</HelmetProvider>;
 };
 
 export default PageMetaComponent;

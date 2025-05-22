@@ -1,5 +1,4 @@
-
-import { LocaleCode, getLocalizedUrl } from '../i18n/config';
+import { LocaleCode } from '../i18n/config';
 
 /**
  * Интерфейс для метаданных страницы
@@ -189,12 +188,43 @@ export function generateHreflangLinks(country: string, page: string = 'home'): R
  * @param type - тип данных (например, "WebPage", "Organization")
  * @param data - дополнительные данные
  */
-export function generateJsonLd(type: string, data: Record<string, any> = {}): string {
+export function generateJsonLd(type: string, data: Record<string, any> = {}): Record<string, any> {
   const baseData = {
     "@context": "https://schema.org",
     "@type": type,
   };
   
-  const jsonLd = { ...baseData, ...data };
-  return JSON.stringify(jsonLd);
+  return { ...baseData, ...data };
+}
+
+/**
+ * Получение абсолютного URL на основе относительного пути
+ * Полезно для формирования корректных канонических URL в SSR
+ * @param path - относительный путь
+ */
+export function getAbsoluteUrl(path: string): string {
+  const baseUrl = 'https://44finance.com';
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+  return `${baseUrl}${normalizedPath}`;
+}
+
+/**
+ * Создание базовых метаданных для страницы с учетом текущего URL
+ * @param title - заголовок страницы
+ * @param description - описание страницы
+ * @param path - относительный путь
+ * @param locale - код локали
+ */
+export function createBasicMetadata(
+  title: string,
+  description: string,
+  path: string,
+  locale: LocaleCode = 'en'
+): PageMeta {
+  return {
+    title,
+    description,
+    canonical: getAbsoluteUrl(path),
+    // Остальные поля будут добавлены при необходимости
+  };
 }
