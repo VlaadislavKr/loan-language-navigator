@@ -18,11 +18,26 @@ export function render(url: string): RenderResult {
   // Создаем контекст для react-helmet-async
   const helmetContext: { helmet?: HelmetServerState } = {};
   
-  // Рендерим приложение в строку
+  // Рендерим приложение в строку с использованием StaticRouter вместо BrowserRouter
+  const appWithoutRouter = () => {
+    const AppContent = () => (
+      <App />
+    );
+    
+    // Извлекаем содержимое App без BrowserRouter
+    const AppWithoutRouterContent = () => {
+      // @ts-ignore - игнорируем ошибку типа для простоты реализации
+      const originalRender = AppContent().props.children.props.children[2];
+      return originalRender.props.children;
+    };
+    
+    return <AppWithoutRouterContent />;
+  };
+  
   const html = renderToString(
     <HelmetProvider context={helmetContext}>
       <StaticRouter location={url}>
-        <App />
+        {appWithoutRouter()}
       </StaticRouter>
     </HelmetProvider>
   );

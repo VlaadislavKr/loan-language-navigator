@@ -1,6 +1,5 @@
 
 import { hydrateRoot } from 'react-dom/client'
-import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import App from './App.tsx'
 import './index.css'
@@ -14,9 +13,7 @@ if (import.meta.env.DEV) {
   import('react-dom/client').then(({ createRoot }) => {
     createRoot(document.getElementById("root")!).render(
       <HelmetProvider>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
+        <App />
       </HelmetProvider>
     );
   });
@@ -25,9 +22,7 @@ if (import.meta.env.DEV) {
   hydrateRoot(
     document.getElementById("root")!,
     <HelmetProvider>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <App />
     </HelmetProvider>
   );
 }
